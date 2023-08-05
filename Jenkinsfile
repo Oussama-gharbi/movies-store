@@ -1,23 +1,34 @@
-def imageName = 'mlabouardy/movies-store'
-def registry = 'https://registry.slowcoder.com'
+ddef imageName = 'movies-store'
+def password = '*YT87az$$'
+def registry = 'oussamagharbi'
 
-node('workers'){
-    stage('Checkout'){
-        checkout scm
+pipeline{
+
+    agent any
+environment {
+        tag = sh(returnStdout: true, script: "git rev-parse --short=10 HEAD").trim()
     }
 
-    def imageTest= docker.build("${imageName}-test", "-f Dockerfile.test .")
+stages{
 
+    stage('Build test') {
+        steps{
+        script{
+
+            sh 'docker build -t ${imageName}-test -f Dockerfile.test .'
+        }    
+
+}
+    }
     stage('Tests'){
-        parallel(
-            'Quality Tests': {
+         parallel{
+            stage('lint test'){
+        steps{
+               
+            script{
                 sh "docker run --rm ${imageName}-test npm run lint"
-            },
-            'Integration Tests': {
                 sh "docker run --rm ${imageName}-test npm run test"
-            },
-            'Coverage Reports': {
-                sh "docker run --rm -v $PWD/coverage:/app/coverage ${imageName}-test npm run coverage-html"
+                 sh "docker run --rm -v $PWD/coverage:/app/coverage ${imageName}-test npm run coverage-html"
                 publishHTML (target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
@@ -27,27 +38,27 @@ node('workers'){
                     reportName: "Coverage Report"
                 ])
             }
-        )
-    }
-
-    stage('Build'){
-        docker.build(imageName)
-    }
-
-    stage('Push'){
-        docker.withRegistry(registry, 'registry') {
-            docker.image(imageName).push(commitID())
-
-            if (env.BRANCH_NAME == 'develop') {
-                docker.image(imageName).push('develop')
-            }
+            
         }
+            }
+  }
     }
-}
+    stage('Build'){
+        steps{
+        script{
 
-def commitID() {
-    sh 'git rev-parse HEAD > .git/commitID'
-    def commitID = readFile('.git/commitID').trim()
-    sh 'rm .git/commitID'
-    commitID
+            sh 'docker build -t ${imageName}  .'
+             echo ' docker login...'
+                           //   sh "docker login -u oussamagharbi -p ${password}"
+                   withCredentials([usernamePassword(credentialsId: 'docker_hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
+                   sh 'echo $PASS | docker login -u $USER --password-stdin'
+                 }
+                  echo ' Docker push...'
+                  sh "docker tag movies-loader oussamagharbi/movies-loader:${tag}"
+                  sh "docker push oussamagharbi/movies-loader:${tag}"
+        }  
+        }  
+    }
+
+    }
 }
