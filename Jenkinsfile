@@ -47,7 +47,7 @@ stages{
         steps{
         script{
 
-            sh 'docker build -t ${imageName}  .'
+            sh "docker build -t ${imageName}  ."
              echo ' docker login...'
                            //   sh "docker login -u oussamagharbi -p ${password}"
                    withCredentials([usernamePassword(credentialsId: 'docker_hub', passwordVariable: 'PASS', usernameVariable: 'USER')]) {
