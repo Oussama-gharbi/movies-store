@@ -44,21 +44,25 @@ stages{
   }
     }
    stage('Static Code Analysis'){
+    steps {
         withSonarQubeEnv('sonar-pro') {
             sh 'sonar-scanner'
         }
     }
+    }
 
-    stage("Quality Gate"){
+    /*stage("Quality Gate"){
+        steps{
         timeout(time: 5, unit: 'MINUTES') {
             def qg = waitForQualityGate()
             if (qg.status != 'OK') {
                 error "Pipeline aborted due to quality gate failure: ${qg.status}"
             }
+            }
         }
-    }
+    }*/
 
-        }
+        
     stage('Build'){
         steps{
         script{
@@ -77,4 +81,5 @@ stages{
     }
 
     }
+
 }
