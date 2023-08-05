@@ -43,13 +43,18 @@ stages{
             }
   }
     }
-   stage('Static Code Analysis'){
+
+
+
+
+
+  /* stage('Static Code Analysis'){
     steps {
         withSonarQubeEnv('sonar-pro') {
             sh 'sonar-scanner'
         }
     }
-    }
+    }*/
 
     /*stage("Quality Gate"){
         steps{
@@ -61,8 +66,35 @@ stages{
             }
         }
     }*/
+stage('CODE ANALYSIS with SONARQUBE') {
 
-        
+            environment {
+                scannerHome = tool 'mysonarscanner4'
+            }
+steps {
+                withSonarQubeEnv('sonar-pro') {
+                    sh '''${scannerHome}/bin/sonar-scanner  \
+                    sonar.projectKey=movies-store
+                    sonar.projectName=movies-store
+                    sonar.projectVersion=1.0.0
+                    sonar.sourceEncoding=UTF-8
+                    sonar.sources=src
+                    sonar.exclusions=**/node_modules/**,**/*.spec.ts
+                    sonar.tests=src/test
+                    sonar.test.inclusions=**/*.spec.ts
+                    sonar.javascript.lcov.reportPaths=coverage/lcov.info'''
+                }
+
+                // timeout(time: 10, unit: 'MINUTES') {
+                //     waitForQualityGate abortPipeline: true
+                // }
+            }
+
+
+}
+
+
+
     stage('Build'){
         steps{
         script{
