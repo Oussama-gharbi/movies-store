@@ -1,4 +1,4 @@
-ddef imageName = 'movies-store'
+def imageName = 'movies-store'
 def password = '*YT87az$$'
 def registry = 'oussamagharbi'
 
