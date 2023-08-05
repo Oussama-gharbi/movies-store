@@ -15,7 +15,7 @@ stages{
         steps{
         script{
 
-            sh 'docker build -t ${imageName}-test -f Dockerfile.test .'
+            sh "docker build -t ${imageName}-test -f Dockerfile.test ."
         }    
 
 }
