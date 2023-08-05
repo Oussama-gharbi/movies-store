@@ -54,8 +54,8 @@ stages{
                    sh 'echo $PASS | docker login -u $USER --password-stdin'
                  }
                   echo ' Docker push...'
-                  sh "docker tag movies-loader oussamagharbi/movies-loader:${tag}"
-                  sh "docker push oussamagharbi/movies-loader:${tag}"
+                  sh "docker tag movies-store oussamagharbi/movies-store:${tag}"
+                  sh "docker push oussamagharbi/movies-store:${tag}"
         }  
         }  
     }
