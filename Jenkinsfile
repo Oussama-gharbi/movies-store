@@ -77,8 +77,8 @@ steps {
                     sh '''${scannerHome}/bin/sonar-scanner  \
                 
                     -Dsonar.projectKey=movies-store \
-                    -Dsonar.sources=. '''
-                    
+                    -Dsonar.sources=. 
+                    -Dsonar.host.url=http://10.165.147.223/:9000 '''
                 }
 
                 // timeout(time: 10, unit: 'MINUTES') {
