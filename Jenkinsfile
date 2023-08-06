@@ -74,15 +74,10 @@ stage('CODE ANALYSIS with SONARQUBE') {
 steps {
                 withSonarQubeEnv('sonar-pro') {
                     sh '''${scannerHome}/bin/sonar-scanner  \
-                    sonar.projectKey=movies-store
-                    sonar.projectName=movies-store
-                    sonar.projectVersion=1.0.0
-                    sonar.sourceEncoding=UTF-8
-                    sonar.sources=src
-                    sonar.exclusions=**/node_modules/**,**/*.spec.ts
-                    sonar.tests=src/test
-                    sonar.test.inclusions=**/*.spec.ts
-                    sonar.javascript.lcov.reportPaths=coverage/lcov.info'''
+                    -sonar-scanner \
+                    -Dsonar.projectKey=movies-store \
+                    -Dsonar.sources=. \
+                    
                 }
 
                 // timeout(time: 10, unit: 'MINUTES') {
