@@ -75,7 +75,7 @@ stage('CODE ANALYSIS with SONARQUBE') {
 steps {
                 withSonarQubeEnv('sonar-pro') {
                     sh '''${scannerHome}/bin/sonar-scanner  \
-                    -sonar-scanner \
+                
                     -Dsonar.projectKey=movies-store \
                     -Dsonar.sources=. '''
                     
