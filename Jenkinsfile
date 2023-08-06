@@ -5,21 +5,22 @@ def registry = 'oussamagharbi'
 pipeline{
 
     agent any
-environment {
+    environment {
         tag = sh(returnStdout: true, script: "git rev-parse --short=10 HEAD").trim()
-    }
+                }
 
-stages{
+    stages{
 
-    stage('Build test') {
+        stage('Build test') {
         steps{
         script{
 
             sh "docker build -t ${imageName}-test -f Dockerfile.test ."
         }    
 
-}
-    }
+        }
+        }
+
     stage('Tests'){
          parallel{
             stage('lint test'){
@@ -76,7 +77,7 @@ steps {
                     sh '''${scannerHome}/bin/sonar-scanner  \
                     -sonar-scanner \
                     -Dsonar.projectKey=movies-store \
-                    -Dsonar.sources=. \
+                    -Dsonar.sources=. '''
                     
                 }
 
@@ -84,9 +85,9 @@ steps {
                 //     waitForQualityGate abortPipeline: true
                 // }
             }
+         }
 
 
-}
 
 
 
@@ -106,7 +107,7 @@ steps {
         }  
         }  
     }
-
     }
-
+    
 }
+
